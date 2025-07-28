@@ -52,5 +52,9 @@ Basis data sudah dinormalisasi hingga **3NF (Third Normal Form)**.
 3. Import file `website_umkm.sql` ke `phpMyAdmin`.
 4. Jalankan di browser dengan alamat:  
    `http://localhost/website_umkm/`
+   dan masuk sebagai admin dengan alamat :
+   `http://localhost/website_umkm/login_admin.php`
+   dengan memasukan username : admin123
+   dan password              : admin123
 
 
