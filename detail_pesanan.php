@@ -52,56 +52,66 @@ $total = 0;
   <title>Detail Pesanan</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script>
-    function tampilkanInstruksi() {
-      const metodeEl = document.getElementById('metode');
-      if (!metodeEl) return;
+function tampilkanInstruksi() {
+  const metodeEl = document.getElementById('metode');
+  if (!metodeEl) return;
 
-      const metode = metodeEl.value;
-      const instruksi = document.getElementById('instruksi');
-      const uploadBox = document.getElementById('uploadBox');
-      const salinBtn = (isi) => `<button type="button" onclick="salin('${isi}')" class="bg-yellow-300 px-2 py-1 rounded ml-2 hover:bg-yellow-400">Salin</button>`;
-      let html = '';
+  const metode_makan = metodeEl.dataset.metode || '';
+  const instruksi = document.getElementById('instruksi');
+  const uploadBox = document.getElementById('uploadBox');
+  const selected = metodeEl.value;
+  const salinBtn = (isi) => `<button type="button" onclick="salin('${isi}')" class="bg-yellow-300 px-2 py-1 rounded ml-2 hover:bg-yellow-400">Salin</button>`;
 
-      uploadBox.style.display = metode === 'Cash' ? 'none' : 'block';
+  // Sembunyikan opsi Cash jika metode makan Diantar
+  if (metode_makan === 'Diantar') {
+    const opsiCash = Array.from(metodeEl.options).find(opt => opt.value === 'Cash');
+    if (opsiCash) opsiCash.style.display = 'none';
+  }
 
-      switch (metode) {
-        case 'Transfer BTN':
-          html = `Transfer ke BTN: <b>0069601610029774 a.n. Akhyar Mualif</b> ${salinBtn('0069601610029774')}`;
-          break;
-        case 'Transfer BRI':
-          html = `Transfer ke BRI: <b>662501037567538 a.n. Akhyar Mualif</b> ${salinBtn('662501037567538')}`;
-          break;
-        case 'DANA':
-        case 'Gopay':
-        case 'ShopeePay':
-          html = `${metode} ke: <b>089530123608 a.n. Akhyar Mualif</b> ${salinBtn('089530123608')}`;
-          break;
-        case 'USDT':
-          html = `USDT (BNB Smart Chain - BEP20):<br><b>0xdbfa6bd10424a3ed864328ec8229c60e29f2067d</b> ${salinBtn('0xdbfa6bd10424a3ed864328ec8229c60e29f2067d')}`;
-          break;
-        case 'Ethereum':
-          html = `Ethereum (ERC20):<br><b>0xdbfa6bd10424a3ed864328ec8229c60e29f2067d</b> ${salinBtn('0xdbfa6bd10424a3ed864328ec8229c60e29f2067d')}`;
-          break;
-        case 'Solana':
-          html = `Solana:<br><b>ABfLZ7LGWXktE56pD1tnJBsDmnA8SSVFSL2xqPKMdXaR</b> ${salinBtn('ABfLZ7LGWXktE56pD1tnJBsDmnA8SSVFSL2xqPKMdXaR')}`;
-          break;
-        case 'Binance QR':
-          html = `<p class="text-center mb-2">Scan QR Binance Pay:</p><img src="gambar/binance.jpg" alt="Binance QR" class="mx-auto rounded shadow-md max-w-[200px]">`;
-          break;
-        case 'Cash':
-          html = "Silakan bayar langsung ke kasir.";
-          break;
-      }
-      instruksi.innerHTML = html;
-    }
+  // Default: sembunyikan uploadBox jika cash
+  uploadBox.style.display = selected === 'Cash' ? 'none' : 'block';
 
-    function salin(teks) {
-      navigator.clipboard.writeText(teks);
-      alert("📋 Disalin:\n" + teks);
-    }
+  let html = '';
+  switch (selected) {
+    case 'Transfer BTN':
+      html = `Transfer ke BTN: <b>0069601610029774 a.n. Akhyar Mualif</b> ${salinBtn('0069601610029774')}`;
+      break;
+    case 'Transfer BRI':
+      html = `Transfer ke BRI: <b>662501037567538 a.n. Akhyar Mualif</b> ${salinBtn('662501037567538')}`;
+      break;
+    case 'DANA':
+    case 'Gopay':
+    case 'ShopeePay':
+      html = `${selected} ke: <b>089530123608 a.n. Akhyar Mualif</b> ${salinBtn('089530123608')}`;
+      break;
+    case 'USDT':
+      html = `USDT (BNB Smart Chain - BEP20):<br><b>0xdbfa6bd10424a3ed864328ec8229c60e29f2067d</b> ${salinBtn('0xdbfa6bd10424a3ed864328ec8229c60e29f2067d')}`;
+      break;
+    case 'Ethereum':
+      html = `Ethereum (ERC20):<br><b>0xdbfa6bd10424a3ed864328ec8229c60e29f2067d</b> ${salinBtn('0xdbfa6bd10424a3ed864328ec8229c60e29f2067d')}`;
+      break;
+    case 'Solana':
+      html = `Solana:<br><b>ABfLZ7LGWXktE56pD1tnJBsDmnA8SSVFSL2xqPKMdXaR</b> ${salinBtn('ABfLZ7LGWXktE56pD1tnJBsDmnA8SSVFSL2xqPKMdXaR')}`;
+      break;
+    case 'Binance QR':
+      html = `<p class="text-center mb-2">Scan QR Binance Pay:</p><img src="gambar/binance.jpg" alt="Binance QR" class="mx-auto rounded shadow-md max-w-[200px]">`;
+      break;
+    case 'Cash':
+      html = "Silakan bayar langsung ke kasir.";
+      break;
+  }
 
-    window.onload = tampilkanInstruksi;
-  </script>
+  instruksi.innerHTML = html;
+}
+
+function salin(teks) {
+  navigator.clipboard.writeText(teks);
+  alert("📋 Disalin:\n" + teks);
+}
+
+window.onload = tampilkanInstruksi;
+</script>
+
 </head>
 <body class="bg-yellow-50 p-6">
   <div class="max-w-3xl mx-auto bg-white shadow-lg p-6 rounded-md">
@@ -160,7 +170,8 @@ $total = 0;
       <form action="proses_bayar.php" method="POST" enctype="multipart/form-data" class="mt-4">
         <input type="hidden" name="id_pesanan" value="<?= $id_pesanan ?>">
         <label class="block mb-1 font-medium">💰 Pilih Metode Pembayaran:</label>
-        <select name="metode" id="metode" onchange="tampilkanInstruksi()" class="w-full p-2 border rounded mb-2" required>
+       <select name="metode" id="metode" onchange="tampilkanInstruksi()" class="w-full p-2 border rounded mb-2" required data-metode="<?= $data['metode'] ?>">
+
             <option value="">-- Pilih --</option>
             <option value="Cash">Cash</option>
             <option value="Transfer BTN">Transfer BTN</option>
