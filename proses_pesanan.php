@@ -27,7 +27,16 @@ $cek = mysqli_query($conn, "SELECT id_pelanggan FROM pelanggan WHERE $where_pela
 if (mysqli_num_rows($cek) > 0) {
     $pelanggan = mysqli_fetch_assoc($cek);
     $id_pelanggan = $pelanggan['id_pelanggan'];
+
+    // Update alamat hanya jika sebelumnya kosong
+    $cek_alamat = mysqli_query($conn, "SELECT alamat FROM pelanggan WHERE id_pelanggan = $id_pelanggan");
+    $row_alamat = mysqli_fetch_assoc($cek_alamat);
+    if (empty($row_alamat['alamat']) && $alamat !== '') {
+        mysqli_query($conn, "UPDATE pelanggan SET alamat = '$alamat' WHERE id_pelanggan = $id_pelanggan");
+    }
+
 } else {
+    // Pelanggan baru —> langsung masukkan dengan alamat
     $insert_pelanggan = mysqli_query($conn, "
         INSERT INTO pelanggan (nama, umur, no_hp, alamat)
         VALUES ('$nama', $umur, '$no_hp', '$alamat')
@@ -37,6 +46,7 @@ if (mysqli_num_rows($cek) > 0) {
     }
     $id_pelanggan = mysqli_insert_id($conn);
 }
+
 
 // Siapkan ID meja jika makan di tempat
 $id_meja_value = ($metode === 'Makan di Tempat' && $id_meja) ? intval($id_meja) : 'NULL';
